@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+
+  RabbitPub.api:
+    image: rabbit-api
+    container_name: rabbit-api
+    build:
+      context: .
+      dockerfile: src/RabbitPub.Api/Dockerfile
+    dns:
+      - 8.8.8.8
+    ports:
+      - "5015:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - rabbit-pub-project
+    volumes:
+      - ~/.config/:/root/.config
+    depends_on: 
+      - rabbitmq-query-bus
+
+  rabbitmq-query-bus:
+    image: rabbitmq:3-management
+    container_name: rabbit-pub-rabbit
+    ports:
+      - "5678:5672"
+      - "15678:15672"
+    networks:
+      - rabbit-pub-project
+        
+networks: 
+  rabbit-pub-project:
+    driver: bridge
