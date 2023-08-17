@@ -63,8 +63,8 @@ public class RabbitSub : BackgroundService
         try
         {
             var message = _rabbitMqService.DencodingMessage<PublishMessage>(eventArgs);
-            var maintenanceInfoService = scope.ServiceProvider.GetRequiredService<ISubscriptionService>();
-            await maintenanceInfoService.ReceiveMessage(message);
+            var subscriptionService = scope.ServiceProvider.GetRequiredService<ISubscriptionService>();
+            await subscriptionService.ReceiveMessage(message);
         }
         catch (Exception ex)
         {
